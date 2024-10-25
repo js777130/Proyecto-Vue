@@ -1,156 +1,81 @@
 <template>
-    <v-container class="text-center">
-      <!-- Filas de tarjetas de proyectos -->
-      <v-row>
-        <v-col v-for="(project, index) in projects" :key="index" cols="12" md="4">
-          <v-card @click="openProject(project.url)" class="project-card">
-            <v-img :src="project.image" height="200px" class="project-image"></v-img>
-            <v-card-title>{{ project.title }}</v-card-title>
-          </v-card>
-        </v-col>
-      </v-row>
-  
-      <!-- Pie de Página -->
-      <footer class="footer">
-        <p class="footer-text">
-          &copy; {{ new Date().getFullYear() }} Innovacode. Todos los derechos reservados.
-        </p>
-        <div class="social-icons">
-          <v-btn icon :href="'https://www.facebook.com/'" target="_blank">
-            <v-icon>mdi-facebook</v-icon>
-          </v-btn>
-          <v-btn icon :href="'https://www.twitter.com/'" target="_blank">
-            <v-icon>mdi-twitter</v-icon>
-          </v-btn>
-          <v-btn icon :href="'https://www.instagram.com/'" target="_blank">
-            <v-icon>mdi-instagram</v-icon>
-          </v-btn>
+    <div class="card-container">
+      <div v-for="(project, index) in projects" :key="index" class="card">
+        <div class="image-container">
+          <img :src="project.image" :alt="`Proyecto ${index + 1}`" />
         </div>
-      </footer>
-  
-      <!-- Botón flotante para subir/bajar -->
-      <v-btn
-        v-if="showScrollButton"
-        fab
-        class="scroll-button"
-        @click="scrollToPosition"
-      >
-        <v-icon v-if="isBottom">mdi-arrow-up</v-icon>
-        <v-icon v-else>mdi-arrow-down</v-icon>
-      </v-btn>
-    </v-container>
+        <button @click="navigateToProject(project.link)">Ver Proyecto</button>
+      </div>
+    </div>
   </template>
   
   <script>
   export default {
+    name: 'ProyectosView',
     data() {
       return {
         projects: [
-          {
-            title: "Proyecto 1",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project1",
-          },
-          {
-            title: "Proyecto 2",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project2",
-          },
-          {
-            title: "Proyecto 3",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project3",
-          },
-          {
-            title: "Proyecto 4",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project4",
-          },
-          {
-            title: "Proyecto 5",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project5",
-          },
-          {
-            title: "Proyecto 6",
-            image: "https://via.placeholder.com/400x200",
-            url: "https://example.com/project6",
-          },
-          
-        ],
-        isBottom: false,
-        showScrollButton: false,
+          { image: require('@/assets/tipicos.png'), title: 'Proyecto 1', link: '/proyecto1view' },
+          { image: '', title: 'Proyecto 2', link: '' },  // Mantén vacío si no tienes imagen
+          { image: '', title: 'Proyecto 3', link: '' },  // Mantén vacío si no tienes imagen
+          { image: '', title: 'Proyecto 4', link: '' },  // Mantén vacío si no tienes imagen
+          { image: '', title: 'Proyecto 5', link: '' },  // Mantén vacío si no tienes imagen
+          { image: '', title: 'Proyecto 6', link: '' },  // Mantén vacío si no tienes imagen
+        ]
       };
     },
     methods: {
-      openProject(url) {
-        window.open(url, "_blank");
-      },
-      scrollToPosition() {
-        const target = this.isBottom ? 0 : document.body.scrollHeight;
-        window.scrollTo({ top: target, behavior: "smooth" });
-        this.isBottom = !this.isBottom;
-      },
-      handleScroll() {
-        const scrollPosition = window.pageYOffset || document.documentElement.scrollTop;
-        const bottomOfPage = document.documentElement.scrollHeight - window.innerHeight;
-  
-        // Mostrar el botón solo cuando el usuario no esté al inicio
-        this.showScrollButton = scrollPosition > 100;
-  
-        // Detectar si el usuario está en la parte inferior
-        this.isBottom = scrollPosition >= bottomOfPage - 10;
-      },
-    },
-    mounted() {
-      window.addEventListener("scroll", this.handleScroll);
-    },
-    beforeUnmount() {
-      window.removeEventListener("scroll", this.handleScroll);
-    },
+      navigateToProject(link) {
+        window.open(link, "_blank");
+      }
+    }
   };
   </script>
   
   <style scoped>
-  .project-card {
-    cursor: pointer;
-    transition: transform 0.3s ease;
+  .card-container {
+    display: grid;
+    gap: 20px;
+    grid-template-columns: repeat(3, 1fr);
+    margin: 20px;
   }
   
-  .project-card:hover {
-    transform: scale(1.05);
+  .card {
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    text-align: center;
+    transition: transform 0.2s;
+    max-width: 320px; /* Tamaño aumentado */
   }
   
-  .project-image {
+  .image-container {
+    overflow: hidden;
     border-radius: 10px;
   }
   
-  /* Estilos del pie de página */
-  .footer {
-    margin-top: 40px;
-    padding: 20px 0;
-    background-color: #ffffff;
-    color: #000000;
-    border-top: 1px solid #ccc;
-    position: relative;
-    font-size: 14px;
+  .card img {
+    border-radius: 8px;
+    width: 100%;
+    height: 220px; /* Mayor altura para mejor visualización */
+    object-fit: cover;
   }
   
-  .footer-text {
-    margin: 0;
-  }
-  
-  .social-icons {
+  .card button {
+    background-color: #6200ea;
+    border: none;
+    border-radius: 5px;
+    color: #fff;
+    cursor: pointer;
     margin-top: 10px;
+    padding: 10px;
+    width: 100%;
+    font-size: 16px;
   }
   
-  /* Estilos del botón flotante */
-  .scroll-button {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background-color: #673ab7;
-    color: white;
+  .card:hover {
+    transform: scale(1.05);
   }
   </style>
   
